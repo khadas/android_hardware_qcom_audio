@@ -220,7 +220,6 @@ static const char * const device_table[SND_DEVICE_MAX] = {
     [SND_DEVICE_OUT_VOICE_SPEAKER] = "voice-speaker",
     [SND_DEVICE_OUT_VOICE_SPEAKER_HFP] = "voice-speaker-hfp",
     [SND_DEVICE_OUT_VOICE_HEADPHONES] = "voice-headphones",
-    [SND_DEVICE_OUT_VOICE_HEADSET] = "voice-headphones",
     [SND_DEVICE_OUT_VOICE_LINE] = "voice-line",
     [SND_DEVICE_OUT_HDMI] = "hdmi",
     [SND_DEVICE_OUT_SPEAKER_AND_HDMI] = "speaker-and-hdmi",
@@ -233,7 +232,6 @@ static const char * const device_table[SND_DEVICE_MAX] = {
     [SND_DEVICE_OUT_VOICE_TTY_VCO_HEADPHONES] = "voice-tty-vco-headphones",
     [SND_DEVICE_OUT_VOICE_TTY_HCO_HANDSET] = "voice-tty-hco-handset",
     [SND_DEVICE_OUT_VOICE_TX] = "voice-tx",
-    [SND_DEVICE_OUT_VOICE_MUSIC_TX] = "voice-music-tx",
     [SND_DEVICE_OUT_AFE_PROXY] = "afe-proxy",
     [SND_DEVICE_OUT_USB_HEADSET] = "usb-headphones",
     [SND_DEVICE_OUT_USB_HEADPHONES] = "usb-headphones",
@@ -317,7 +315,6 @@ static int acdb_device_table[SND_DEVICE_MAX] = {
     [SND_DEVICE_OUT_VOICE_LINE] = 10,
     [SND_DEVICE_OUT_VOICE_SPEAKER] = 14,
     [SND_DEVICE_OUT_VOICE_HEADPHONES] = 10,
-    [SND_DEVICE_OUT_VOICE_HEADSET] = 10,
     [SND_DEVICE_OUT_HDMI] = 18,
     [SND_DEVICE_OUT_SPEAKER_AND_HDMI] = 14,
     [SND_DEVICE_OUT_BT_SCO] = 22,
@@ -329,7 +326,6 @@ static int acdb_device_table[SND_DEVICE_MAX] = {
     [SND_DEVICE_OUT_VOICE_TTY_VCO_HEADPHONES] = 17,
     [SND_DEVICE_OUT_VOICE_TTY_HCO_HANDSET] = 37,
     [SND_DEVICE_OUT_VOICE_TX] = 45,
-    [SND_DEVICE_OUT_VOICE_MUSIC_TX] = 3,
     [SND_DEVICE_OUT_AFE_PROXY] = 0,
     [SND_DEVICE_OUT_USB_HEADSET] = 45,
     [SND_DEVICE_OUT_VOICE_USB_HEADSET] = 45,
@@ -419,7 +415,6 @@ static struct name_to_index snd_device_name_index[SND_DEVICE_MAX] = {
     {TO_NAME_INDEX(SND_DEVICE_OUT_VOICE_SPEAKER)},
     {TO_NAME_INDEX(SND_DEVICE_OUT_VOICE_SPEAKER_HFP)},
     {TO_NAME_INDEX(SND_DEVICE_OUT_VOICE_HEADPHONES)},
-    {TO_NAME_INDEX(SND_DEVICE_OUT_VOICE_HEADSET)},
     {TO_NAME_INDEX(SND_DEVICE_OUT_VOICE_LINE)},
     {TO_NAME_INDEX(SND_DEVICE_OUT_HDMI)},
     {TO_NAME_INDEX(SND_DEVICE_OUT_SPEAKER_AND_HDMI)},
@@ -1210,8 +1205,6 @@ void platform_deinit(void *platform)
     struct operator_specific_device *device_item;
     struct listnode *node;
 
-    audio_extn_spkr_prot_deinit(my_data->adev);
-
     hw_info_deinit(my_data->hw_info);
 
     for (dev = 0; dev < SND_DEVICE_MAX; dev++) {
@@ -1848,8 +1841,6 @@ snd_device_t platform_get_output_snd_device(void *platform, audio_devices_t devi
                 }
             } else if (devices & AUDIO_DEVICE_OUT_LINE) {
                 snd_device = SND_DEVICE_OUT_VOICE_LINE;
-            } else if (devices & AUDIO_DEVICE_OUT_WIRED_HEADSET) {
-                snd_device = SND_DEVICE_OUT_VOICE_HEADSET;
             } else {
                 snd_device = SND_DEVICE_OUT_VOICE_HEADPHONES;
             }
